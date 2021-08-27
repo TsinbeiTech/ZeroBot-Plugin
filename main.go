@@ -3,54 +3,32 @@ package main
 import (
 	"fmt"
 	"os"
-	"strings"
 
-	// 注：以下插件均可通过前面加 // 注释，注释后停用并不加载插件 
-	// 下列插件可与 wdvxdr1123/ZeroBot v1.1.2 以上配合单独使用
-	// 词库类
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin_atri" // ATRI词库
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin_chat" // 基础词库
-
-	// 实用类
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin_github"  // 搜索GitHub仓库
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin_manager" // 群管
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin_runcode" // 在线运行代码
-
-	// 娱乐类
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin_ai_false"  // 服务器监控
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin_hs"        // 炉石
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin_minecraft" // MCSManager
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin_music"     // 点歌
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin_omikuji"   // 浅草寺求签
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin_shindan"   // 测定
-
-	// b站相关
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin_bilibili" // 查询b站用户信息
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin_diana"    // 嘉心糖发病
-
-	// 二次元图片
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin_acgimage"     // 随机图片与AI点评
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin_aiwife"       // 随机老婆
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin_image_finder" // 关键字搜图
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin_lolicon"      // lolicon 随机图片
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin_saucenao"     // 以图搜图
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin_setutime"     // 来份涩图
-
-	// 以下为内置依赖，勿动
 	log "github.com/sirupsen/logrus"
 	easy "github.com/t-tomalak/logrus-easy-formatter"
 	zero "github.com/wdvxdr1123/ZeroBot"
 	"github.com/wdvxdr1123/ZeroBot/driver"
-)
+	"github.com/wdvxdr1123/ZeroBot/message"
 
-var (
-	contents = []string{
-		"* OneBot + ZeroBot + Golang ",
-		"* Version 1.1.0 - 2021-08-06 23:36:29 +0800 CST",
-		"* Copyright © 2020 - 2021  Kanri, DawnNights, Fumiama, Suika",
-		"* Project: https://github.com/FloatTech/ZeroBot-Plugin",
-	}
-	banner = strings.Join(contents, "\n")
+	// 注：以下插件均可通过前面加 // 注释，注释后停用并不加载插件
+	// 下列插件可与 wdvxdr1123/ZeroBot v1.1.2 以上配合单独使用
+	// 词库类
+	_ "github.com/Yiwen-Chan/ZeroBot-Plugin/atri"   // ATRI词库
+	_ "github.com/Yiwen-Chan/ZeroBot-Plugin/chat"   // 基础词库
+	_ "github.com/Yiwen-Chan/ZeroBot-Plugin/huahua" // 椛椛词库
+
+	// 实用类
+	_ "github.com/Yiwen-Chan/ZeroBot-Plugin/github"  // 搜索GitHub仓库
+	_ "github.com/Yiwen-Chan/ZeroBot-Plugin/manager" // 群管
+	_ "github.com/Yiwen-Chan/ZeroBot-Plugin/runcode" // 在线运行代码
+
+	// 娱乐类
+	_ "github.com/Yiwen-Chan/ZeroBot-Plugin/music"       // 点歌
+	_ "github.com/Yiwen-Chan/ZeroBot-Plugin/picsearcher" // 搜图
+	_ "github.com/Yiwen-Chan/ZeroBot-Plugin/randimg"     //简易随机图片
+
+	_ "github.com/Yiwen-Chan/ZeroBot-Plugin/setutime" // 涩图
+	_ "github.com/Yiwen-Chan/ZeroBot-Plugin/shindan"  // 测定
 )
 
 func init() {
@@ -62,33 +40,31 @@ func init() {
 }
 
 func main() {
-	fmt.Print(
-		"\n======================[ZeroBot-Plugin]======================",
-		"\n", banner, "\n",
-		"============================================================\n",
-	) // 启动打印
+	fmt.Print(`
+====================[ZeroBot-Plugin]====================
+* OneBot + ZeroBot + Golang
+* Version 1.0.3 - 2021-05-02 18:50:40.5489203 +0800 CST
+* Copyright © 2021 Kanri, DawnNights, All Rights Reserved
+* Project: https://github.com/Yiwen-Chan/ZeroBot-Plugin
+========================================================
+`) // 启动打印
 	zero.Run(zero.Config{
 		NickName:      []string{"Bot", "bot", "机器人", "小天", "小文", "Robot", "robot", "群机器人"},
 		CommandPrefix: "/",
-
-		// SuperUsers 某些功能需要主人权限，可通过以下两种方式修改
-		// []string{}：通过代码写死的方式添加主人账号
-		// os.Args[1:]：通过命令行参数的方式添加主人账号
-		SuperUsers: append([]string{"3152680003"}, os.Args[1:]...),
-
+		SuperUsers:    os.Args[1:3152680003], // 必须修改，否则无权限
 		Driver: []zero.Driver{
-			&driver.WSClient{
-				// OneBot 正向WS 默认使用 6700 端口
-				Url:         "ws://127.0.0.1:6700",
-				AccessToken: "chU6jni87YDB7hdk9PXh3",
-			},
+			driver.NewWebSocketClient("ws://127.0.0.1:6700/", "chU6jni87YDB7hdk9PXh3"),
 		},
 	})
-
 	// 帮助
-	zero.OnFullMatchGroup([]string{"help", "/help", ".help", "菜单", "帮助", "功能", "说明"}, zero.OnlyToMe).SetBlock(true).SetPriority(999).
+	zero.OnFullMatchGroup([]string{"help", "/help", ".help", "菜单", "帮助"}, zero.OnlyToMe).SetBlock(true).SetPriority(999).
 		Handle(func(ctx *zero.Ctx) {
-			ctx.Send(banner)
+			ctx.SendChain(message.Text(
+				"* OneBot + ZeroBot + Golang ", "\n",
+				"* Version 1.0.3 - 2021-05-02 18:50:40.5489203 +0800 CST", "\n",
+				"* Copyright © 2021 Kanri, DawnNights, All Rights Reserved ", "\n",
+				"* Project: https://github.com/Yiwen-Chan/ZeroBot-Plugin",
+			))
 		})
 	select {}
 }
